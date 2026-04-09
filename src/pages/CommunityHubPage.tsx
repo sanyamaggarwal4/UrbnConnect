@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useT } from '../i18n/translations';
 import { MOCK_DRIVES, MOCK_LEADERBOARD, TREE_TYPES } from '../mockData';
 import { useAppContext } from '../context/AppContext';
+import { supabase } from '../lib/supabase';
 import type { TreeType, CommunityDrive } from '../types';
 
 type Tab = 'feed' | 'adopt' | 'leaderboard';
@@ -21,11 +22,56 @@ export default function CommunityHubPage() {
     const [activeTab, setActiveTab] = useState<Tab>('feed');
     const [joinedDrives, setJoinedDrives] = useState<Set<string>>(new Set());
     
-    // Tree Adoption State
     const [selectedTree, setSelectedTree] = useState<TreeType | null>(null);
     const [adoptionSuccess, setAdoptionSuccess] = useState(false);
     const [adoptedTrees, setAdoptedTrees] = useState<AdoptedTree[]>([]);
     const [treeForm, setTreeForm] = useState({ nickname: '', location: '', occasion: '' });
+
+    const [drives, setDrives] = useState<CommunityDrive[]>([]);
+    
+    useEffect(() => {
+        const hasSupabase = import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_URL !== 'https://your-project.supabase.co';
+        if (!hasSupabase) {
+            setDrives(MOCK_DRIVES);
+            return;
+        }
+
+        async function fetchData() {
+            // Fetch drives
+            const { data: driveData } = await supabase.from('cv_community_drives').select('*').order('created_at', { ascending: false });
+            if (driveData && driveData.length > 0) {
+                setDrives(driveData.map((d: any) => ({
+                    id: d.id,
+                    title: d.title,
+                    description: d.description,
+                    type: d.drive_type as any,
+                    date: d.drive_date,
+                    location: d.location,
+                    authorityName: d.authority_name,
+                    participantsCount: d.participants_count,
+                    imageUrl: d.image_url
+                })));
+            } else {
+                setDrives(MOCK_DRIVES);
+            }
+
+            // Fetch my trees
+            if (currentUser?.id && currentUser.id !== 'guest') {
+                const { data: treeData } = await supabase.from('cv_adopted_trees').select('*').eq('adopted_by', currentUser.id).order('created_at', { ascending: false });
+                if (treeData) {
+                    setAdoptedTrees(treeData.map((t: any) => ({
+                        id: t.id,
+                        typeId: t.type_id as any,
+                        nickname: t.nickname,
+                        location: t.location,
+                        occasion: t.occasion,
+                        date: new Date(t.created_at).toLocaleDateString()
+                    })));
+                }
+            }
+        }
+        fetchData();
+    }, [currentUser]);
 
     const handleJoinDrive = (driveId: string) => {
         setJoinedDrives(prev => {
@@ -35,16 +81,39 @@ export default function CommunityHubPage() {
         });
     };
 
-    const handleAdoptTree = () => {
+    const handleAdoptTree = async () => {
         if (!selectedTree) return;
-        setAdoptedTrees(prev => [{
-            id: Math.random().toString(36).substring(2, 9),
+        
+        const newTree: AdoptedTree = {
+            id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 9),
             typeId: selectedTree,
             nickname: treeForm.nickname,
             location: treeForm.location,
             occasion: treeForm.occasion,
             date: new Date().toLocaleDateString()
-        }, ...prev]);
+        };
+
+        // Optimistic
+        setAdoptedTrees(prev => [newTree, ...prev]);
+
+        const hasSupabase = import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_URL !== 'https://your-project.supabase.co';
+        if (hasSupabase && currentUser?.id && currentUser.id !== 'guest') {
+            const { error } = await supabase.from('cv_adopted_trees').insert({
+                id: newTree.id,
+                type_id: newTree.typeId,
+                nickname: newTree.nickname,
+                location: newTree.location,
+                occasion: newTree.occasion,
+                adopted_by: currentUser.id
+            });
+            if (error) {
+                console.error("Adopt tree error:", error);
+                alert("Failed to adopt tree: " + error.message);
+                setAdoptedTrees(prev => prev.filter(t => t.id !== newTree.id));
+                return;
+            }
+        }
+
         setAdoptionSuccess(true);
         setTimeout(() => {
             setAdoptionSuccess(false);
@@ -99,7 +168,7 @@ export default function CommunityHubPage() {
             {/* --- FEED TAB --- */}
             {activeTab === 'feed' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    {MOCK_DRIVES.map((drive: CommunityDrive) => (
+                    {drives.map((drive: CommunityDrive) => (
                         <div key={drive.id} className="cv-card" style={{ padding: '1.5rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                                 <div>

@@ -16,14 +16,31 @@ export default function CreateDrivePage() {
 
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            setLoading(false);
-            navigate('/community');
-        }, 800);
+
+        const hasSupabase = import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_URL !== 'https://your-project.supabase.co';
+        if (hasSupabase) {
+            // Late import so it doesn't break offline components
+            const { supabase } = await import('../lib/supabase');
+            const { error } = await supabase.from('cv_community_drives').insert({
+                title: form.title,
+                description: form.description,
+                drive_type: form.type,
+                drive_date: form.date,
+                location: form.location,
+                authority_name: 'Local Authority', // Hardcoded fallback unless read from context
+            });
+            if (error) {
+                alert('Error creating drive: ' + error.message);
+                setLoading(false);
+                return;
+            }
+        }
+        
+        setLoading(false);
+        navigate('/community');
     };
 
     return (

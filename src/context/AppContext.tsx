@@ -210,28 +210,33 @@ export function AppProvider({ children }: { children: ReactNode }) {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
             if (session?.user) {
                 // We have a user! Extract info.
+                const userId = session.user.id;
                 const email = session.user.email || '';
-                const name = session.user.user_metadata?.full_name || email.split('@')[0];
+                const phone = session.user.phone || '';
+                const name = session.user.user_metadata?.full_name || email.split('@')[0] || phone || 'Citizen';
                 const avatar_url = session.user.user_metadata?.avatar_url;
 
                 // Sync with cv_users database table to persist and load role
-                let userRole: UserRole = (session.user.user_metadata?.role as UserRole) || 'citizen';
-                const { data: existingUser } = await supabase.from('cv_users').select('*').eq('email', email).single();
+                // The SQL trigger already created the basic row, but we fetch it to get role.
+                const { data: existingUser, error: fetchErr } = await supabase.from('cv_users').select('*').eq('id', userId).single();
 
-                if (!existingUser) {
-                    const newId = `user-${Date.now()}`;
-                    await supabase.from('cv_users').insert({
-                        id: newId,
+                let finalRole: UserRole = 'citizen';
+                if (existingUser) {
+                    finalRole = existingUser.role as UserRole;
+                } else if (fetchErr && fetchErr.code === 'PGRST116') {
+                    // Fallback: the trigger didn't run or hasn't committed yet, let's upsert manually
+                    finalRole = (session.user.user_metadata?.role as UserRole) || 'citizen';
+                    await supabase.from('cv_users').upsert({
+                        id: userId,
                         name,
                         email,
-                        role: userRole,
+                        phone,
+                        role: finalRole,
                         avatar_url
                     });
-                    setCurrentUser({ id: newId, name, email, role: userRole, avatar_url } as User);
-                } else {
-                    userRole = existingUser.role as UserRole;
-                    setCurrentUser({ id: existingUser.id, name: existingUser.name, email: existingUser.email, role: userRole, avatar_url } as User);
                 }
+
+                setCurrentUser({ id: userId, name, email, phone, role: finalRole, avatar_url } as any);
             } else {
                 // Signed out
                 const savedGuestRole = localStorage.getItem('cv-guest') as UserRole | null;
@@ -318,7 +323,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const addIssue = useCallback(
         async (draft: Omit<Issue, 'id' | 'createdAt' | 'updatedAt' | 'upvotes' | 'upvotedBy'>) => {
             const now = new Date().toISOString();
-            const id = `i-${Date.now()}`;
+            const id = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `i-${Date.now()}`;
 
             let geocodeLat = draft.location.lat;
             let geocodeLng = draft.location.lng;
