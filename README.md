@@ -55,6 +55,16 @@ Built as a hackathon project by **Team Infinite Loop** — students from USICT, 
 | **Green Suggestions** | Solar micro-grids, rainwater harvesting, green lanes, green building mandates |
 | **Report Low Greenery** | Dedicated issue category for deforestation and greenery deficits |
 
+### 👥 Community Hub
+
+| Feature | Description |
+|---|---|
+| **Community Feed** | Timeline of local cleanliness drives, plantation events, and awareness campaigns |
+| **Start a Drive** | Authorities can easily start and manage civic drives straight from their dashboard |
+| **Adopt a Tree** | Citizens can digitally adopt a specific tree species and dedicate it to a special occasion (e.g., birthdays) |
+| **My Forest** | A personal dashboard grid showcasing all of a user's adopted trees, planting dates, and locations |
+| **Leaderboard** | Global civic ranking based on a "Combined Civic Score" (adopted trees + drives joined + issues reported) |
+
 ### 🌐 Platform-Wide
 
 - **Bilingual UI** — Full English 🇬🇧 and Hindi 🇮🇳 translation across all pages
@@ -180,9 +190,11 @@ npm run build
 | `/map` | Map View | Citizen |
 | `/area-insights` | Area Insights | Citizen |
 | `/sustainability` | Green Intelligence | Citizen |
+| `/community` | Community Hub | Citizen |
 | `/profile` | Profile | Citizen |
 | `/authority` | Authority Dashboard | Authority |
 | `/authority/issues` | All Issues (Authority) | Authority |
+| `/authority/create-drive` | Start a Drive | Authority |
 
 ---
 
