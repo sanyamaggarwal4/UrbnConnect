@@ -37,37 +37,54 @@ export default function CommunityHubPage() {
         }
 
         async function fetchData() {
-            // Fetch drives
-            const { data: driveData } = await supabase.from('cv_community_drives').select('*').order('created_at', { ascending: false });
-            if (driveData && driveData.length > 0) {
-                setDrives(driveData.map((d: any) => ({
-                    id: d.id,
-                    title: d.title,
-                    description: d.description,
-                    type: d.drive_type as any,
-                    date: d.drive_date,
-                    location: d.location,
-                    authorityName: d.authority_name,
-                    participantsCount: d.participants_count,
-                    imageUrl: d.image_url
-                })));
-            } else {
-                setDrives(MOCK_DRIVES);
-            }
-
-            // Fetch my trees
-            if (currentUser?.id && currentUser.id !== 'guest') {
-                const { data: treeData } = await supabase.from('cv_adopted_trees').select('*').eq('adopted_by', currentUser.id).order('created_at', { ascending: false });
-                if (treeData) {
-                    setAdoptedTrees(treeData.map((t: any) => ({
-                        id: t.id,
-                        typeId: t.type_id as any,
-                        nickname: t.nickname,
-                        location: t.location,
-                        occasion: t.occasion,
-                        date: new Date(t.created_at).toLocaleDateString()
-                    })));
+            try {
+                // Fetch drives
+                const { data: driveData, error: driveErr } = await supabase.from('cv_community_drives').select('*').order('created_at', { ascending: false });
+                
+                if (driveErr) {
+                    console.error('[CommunityHub] fetch drives error:', driveErr);
                 }
+
+                if (driveData && driveData.length > 0) {
+                    setDrives(driveData.map((d: any) => ({
+                        id: d.id,
+                        title: d.title,
+                        description: d.description,
+                        type: d.drive_type as any,
+                        date: d.drive_date,
+                        location: d.location,
+                        authorityName: d.authority_name,
+                        participantsCount: d.participants_count || 0,
+                        imageUrl: d.image_url
+                    })));
+                } else if (!driveErr) {
+                    // It's genuinely empty in Supabase
+                    setDrives([]);
+                } else {
+                    // Fallback on error
+                    setDrives(MOCK_DRIVES);
+                }
+
+                // Fetch my trees
+                if (currentUser?.id && currentUser.id !== 'guest') {
+                    const { data: treeData, error: treeErr } = await supabase.from('cv_adopted_trees').select('*').eq('adopted_by', currentUser.id).order('created_at', { ascending: false });
+                    
+                    if (treeErr) console.error('[CommunityHub] fetch trees error:', treeErr);
+
+                    if (treeData) {
+                        setAdoptedTrees(treeData.map((t: any) => ({
+                            id: t.id,
+                            typeId: t.type_id as any,
+                            nickname: t.nickname,
+                            location: t.location,
+                            occasion: t.occasion,
+                            date: new Date(t.created_at).toLocaleDateString()
+                        })));
+                    }
+                }
+            } catch (err) {
+                console.error('[CommunityHub] Critical query error:', err);
+                setDrives(MOCK_DRIVES);
             }
         }
         fetchData();
@@ -168,40 +185,48 @@ export default function CommunityHubPage() {
             {/* --- FEED TAB --- */}
             {activeTab === 'feed' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    {drives.map((drive: CommunityDrive) => (
-                        <div key={drive.id} className="cv-card" style={{ padding: '1.5rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                                <div>
-                                    <h3 style={{ margin: '0 0 .3rem 0', fontSize: '1.15rem' }}>{drive.title}</h3>
-                                    <span style={{ fontSize: '.8rem', color: 'var(--cv-text-muted)', display: 'block', marginBottom: '.8rem' }}>
-                                        By {drive.authorityName} • {drive.date}
+                    {drives.length === 0 ? (
+                        <div className="cv-card" style={{ padding: '3rem 2rem', textAlign: 'center' }}>
+                            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🍃</div>
+                            <h3 style={{ marginBottom: '0.5rem' }}>No active drives yet</h3>
+                            <p style={{ color: 'var(--cv-text-muted)' }}>Check back later or ask an Authority to start a new cleanliness or plantation drive!</p>
+                        </div>
+                    ) : (
+                        drives.map((drive: CommunityDrive) => (
+                            <div key={drive.id} className="cv-card" style={{ padding: '1.5rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                                    <div>
+                                        <h3 style={{ margin: '0 0 .3rem 0', fontSize: '1.15rem' }}>{drive.title}</h3>
+                                        <span style={{ fontSize: '.8rem', color: 'var(--cv-text-muted)', display: 'block', marginBottom: '.8rem' }}>
+                                            By {drive.authorityName} • {drive.date}
+                                        </span>
+                                    </div>
+                                    <span className="cv-chip" style={{ background: 'var(--cv-bg-mute)', fontSize: '.75rem' }}>
+                                        {t[drive.type as keyof typeof t] || drive.type}
                                     </span>
                                 </div>
-                                <span className="cv-chip" style={{ background: 'var(--cv-bg-mute)', fontSize: '.75rem' }}>
-                                    {t[drive.type as keyof typeof t] || drive.type}
-                                </span>
-                            </div>
-                            
-                            <p style={{ fontSize: '.9rem', color: 'var(--cv-text-secondary)', marginBottom: '1.2rem', lineHeight: 1.5 }}>
-                                {drive.description}
-                            </p>
-                            
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--cv-border)' }}>
-                                <div style={{ fontSize: '.85rem', color: 'var(--cv-text-secondary)', display: 'flex', alignItems: 'center', gap: '.4rem' }}>
-                                    <span>📍 {drive.location}</span>
-                                    <span>•</span>
-                                    <span>👥 {drive.participantsCount + (joinedDrives.has(drive.id) ? 1 : 0)} joined</span>
+                                
+                                <p style={{ fontSize: '.9rem', color: 'var(--cv-text-secondary)', marginBottom: '1.2rem', lineHeight: 1.5 }}>
+                                    {drive.description}
+                                </p>
+                                
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--cv-border)' }}>
+                                    <div style={{ fontSize: '.85rem', color: 'var(--cv-text-secondary)', display: 'flex', alignItems: 'center', gap: '.4rem' }}>
+                                        <span>📍 {drive.location}</span>
+                                        <span>•</span>
+                                        <span>👥 {drive.participantsCount + (joinedDrives.has(drive.id) ? 1 : 0)} joined</span>
+                                    </div>
+                                    <button 
+                                        className={`cv-btn ${joinedDrives.has(drive.id) ? 'cv-btn-secondary' : 'cv-btn-primary'}`}
+                                        onClick={() => handleJoinDrive(drive.id)}
+                                        disabled={joinedDrives.has(drive.id)}
+                                    >
+                                        {joinedDrives.has(drive.id) ? `✅ ${t.joinedDrive}` : t.joinDrive}
+                                    </button>
                                 </div>
-                                <button 
-                                    className={`cv-btn ${joinedDrives.has(drive.id) ? 'cv-btn-secondary' : 'cv-btn-primary'}`}
-                                    onClick={() => handleJoinDrive(drive.id)}
-                                    disabled={joinedDrives.has(drive.id)}
-                                >
-                                    {joinedDrives.has(drive.id) ? `✅ ${t.joinedDrive}` : t.joinDrive}
-                                </button>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    )}
                 </div>
             )}
 
