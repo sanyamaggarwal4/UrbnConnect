@@ -107,3 +107,31 @@ export interface SustainabilityMetrics {
   deficitZone: boolean;        // High priority for plantation if true
   plantationPriority: 'low' | 'medium' | 'high' | 'critical';
 }
+
+// ── Community Hub (PRD 2) ────────────────────────────────────
+
+export type DriveType = 'cleanliness' | 'plantation' | 'awareness' | 'volunteering' | 'health-safety';
+
+export interface CommunityDrive {
+  id: string;
+  title: string;
+  description: string;
+  type: DriveType;
+  date: string;       // ISO or simple date string
+  location: string;   // Text-based
+  authorityName: string; // Posted by
+  participantsCount: number;
+  imageUrl?: string;
+}
+
+export type TreeType = 'neem' | 'peepal' | 'banyan' | 'mango' | 'ashoka' | 'gulmohar' | 'coconut' | 'other';
+
+export interface LeaderboardEntry {
+  rank: number;
+  userId: string;
+  userName: string;
+  civicScore: number;
+  treesAdopted: number;
+  drivesJoined: number;
+  issuesReported: number;
+}

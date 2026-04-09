@@ -129,6 +129,16 @@ export default function AuthorityDashboard() {
                                 +{recentIssues.length} new
                             </span>
                         </div>
+                        <div className="cv-flex cv-gap-sm" style={{ marginBottom: '1rem' }}>
+                            <Link to="/authority/issues" className="cv-btn cv-btn-primary" style={{ flex: 1, padding: '1rem', height: 'auto', display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
+                                <span style={{ fontSize: '1.5rem' }}>📋</span>
+                                <span>View All Reports</span>
+                            </Link>
+                            <Link to="/authority/create-drive" className="cv-btn cv-btn-secondary" style={{ flex: 1, padding: '1rem', height: 'auto', display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
+                                <span style={{ fontSize: '1.5rem' }}>📢</span>
+                                <span>{t.postToCommunity || 'Post to Community'}</span>
+                            </Link>
+                        </div>
                         <p className="cv-text-xs cv-text-secondary">
                             A total of {recentIssues.length} issue(s) were reported to your authority this past week.
                         </p>

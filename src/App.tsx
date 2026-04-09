@@ -15,6 +15,8 @@ import AuthorityAnalyticsPage from './pages/AuthorityAnalyticsPage';
 import ContactUsPage from './pages/ContactUsPage';
 import AboutUsPage from './pages/AboutUsPage';
 import SustainabilityPage from './pages/SustainabilityPage';
+import CommunityHubPage from './pages/CommunityHubPage';
+import CreateDrivePage from './pages/CreateDrivePage';
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -44,6 +46,7 @@ export default function App() {
           <Route path="/map" element={<MapViewPage />} />
           <Route path="/area-insights" element={<AreaInsightsPage />} />
           <Route path="/sustainability" element={<SustainabilityPage />} />
+          <Route path="/community" element={<CommunityHubPage />} />
           <Route path="/profile" element={<ProfilePage />} />
 
           {/* Authority */}
@@ -51,6 +54,7 @@ export default function App() {
           <Route path="/authority/issues" element={<AuthorityIssuesPage />} />
           <Route path="/authority/map" element={<MapViewPage />} />
           <Route path="/authority/analytics" element={<AuthorityAnalyticsPage />} />
+          <Route path="/authority/create-drive" element={<CreateDrivePage />} />
 
           {/* Static */}
           <Route path="/about" element={<AboutUsPage />} />

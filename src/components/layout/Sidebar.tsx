@@ -20,6 +20,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         { to: '/map', icon: '🗺️', label: t.mapView },
         { to: '/area-insights', icon: '📊', label: t.areaInsights },
         { to: '/sustainability', icon: '🌿', label: 'Green Intelligence' },
+        { to: '/community', icon: '👥', label: t.communityHub || 'Community Hub' },
         { to: '/profile', icon: '👤', label: t.profile },
     ];
 
@@ -29,6 +30,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         { to: '/authority/map', icon: '🗺️', label: t.mapView },
         { to: '/authority/analytics', icon: '📈', label: t.analytics },
         { to: '/sustainability', icon: '🌿', label: 'Green Intelligence' },
+        { to: '/community', icon: '👥', label: t.communityHub || 'Community Hub' },
     ];
 
     const navLinks = isAuthority ? authorityLinks : citizenLinks;

@@ -125,6 +125,27 @@ export default function CitizenDashboard() {
                     {/* Sustainability Intelligence */}
                     <SustainabilityCard metrics={sustainMetrics} />
 
+                    {/* Community Hub Shortcut */}
+                    <div className="cv-card" style={{ padding: '0', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{
+                            padding: '1.5rem',
+                            borderBottom: '1px solid var(--cv-border)',
+                            background: 'linear-gradient(135deg, rgba(82, 196, 26, 0.08), rgba(24, 144, 255, 0.08))'
+                        }}>
+                            <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '.5rem', fontSize: '1.1rem' }}>
+                                👥 Community Hub
+                            </h3>
+                        </div>
+                        <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
+                            <p style={{ margin: 0, fontSize: '.9rem', color: 'var(--cv-text-secondary)', lineHeight: 1.5 }}>
+                                Join local drives or adopt trees in your locality.
+                            </p>
+                            <Link to="/community" className="cv-btn cv-btn-primary" style={{ width: '100%', marginTop: 'auto' }}>
+                                Open Community Hub
+                            </Link>
+                        </div>
+                    </div>
+
                     {/* Area Summary */}
                     <div className="cv-card">
                         <h4 style={{ marginBottom: '.75rem' }}>📍 {t.areaSummary}</h4>
@@ -219,4 +240,3 @@ export default function CitizenDashboard() {
         </div>
     );
 }
-
