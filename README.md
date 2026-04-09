@@ -240,20 +240,8 @@ All UI strings are maintained in `src/i18n/translations.ts` under two language k
 
 Language is toggled via the Navbar switcher and stored in `AppContext`. To add a new language, add a matching key block in the translations file.
 
----
 
-## 👨‍💻 Team
 
-**Team Infinite Loop** — USICT, GGSIPU, New Delhi
-
-| Name | Role |
-|---|---|
-| Sanyam Aggarwal | Team Lead & Full-Stack Developer |
-| Harshit | Frontend Developer |
-| Manya | UI/UX & Research |
-| Harsh | Backend & Database |
-
----
 
 ## 📄 License
 
