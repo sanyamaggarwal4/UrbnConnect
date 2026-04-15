@@ -38,6 +38,13 @@
   /* Transitions */
   --cv-ease: cubic-bezier(.4, 0, .2, 1);
 
+  /* Eco / Green theme (Community Hub, Sustainability, Tree sections only) */
+  --cv-eco-green: #16A34A;
+  --cv-eco-green-light: #22C55E;
+  --cv-eco-green-muted: rgba(22, 163, 74, 0.1);
+  --cv-eco-gradient: linear-gradient(135deg, #14532D 0%, #166534 60%, #15803D 100%);
+  --cv-eco-gradient-soft: linear-gradient(135deg, rgba(22,163,74,0.12) 0%, rgba(34,197,94,0.06) 100%);
+
   /* Layout */
   --cv-sidebar-w: 260px;
   --cv-navbar-h: 64px;
@@ -956,4 +963,320 @@ h4 {
 
 .cv-toggle input:checked~.cv-toggle-thumb {
   transform: translateX(20px);
+}
+
+/* ── Eco / Green Utility Classes ─────────────────────────── */
+
+.cv-eco-card {
+  background: var(--cv-eco-gradient-soft);
+  border: 1px solid rgba(22, 163, 74, 0.2);
+  border-left: 4px solid var(--cv-eco-green);
+  border-radius: var(--cv-radius);
+  padding: 1.25rem 1.5rem;
+}
+
+.cv-eco-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--cv-eco-green);
+  border-radius: var(--cv-radius-full);
+  padding: .2rem .65rem;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.cv-eco-header {
+  background: var(--cv-eco-gradient);
+  color: #ffffff;
+  border-radius: var(--cv-radius-lg);
+  padding: 2rem 2rem 1.75rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cv-eco-header::before {
+  content: '🌿';
+  position: absolute;
+  right: 1.5rem;
+  top: 1rem;
+  font-size: 5rem;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.cv-civic-score-card {
+  background: linear-gradient(135deg, var(--cv-eco-green) 0%, #15803D 100%);
+  color: #fff;
+  border-radius: var(--cv-radius-lg);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cv-civic-score-card::after {
+  content: '⭐';
+  position: absolute;
+  right: 1rem;
+  bottom: 0.5rem;
+  font-size: 3.5rem;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.cv-drive-progress {
+  height: 8px;
+  background: var(--cv-border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: .5rem;
+}
+
+.cv-drive-progress-bar {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--cv-eco-green), var(--cv-eco-green-light));
+  transition: width .4s var(--cv-ease);
+}
+
+.cv-status-chip {
+  display: inline-block;
+  padding: .2rem .6rem;
+  border-radius: 99px;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.cv-status-proposed  { background: rgba(148,163,184,.15); color: #64748B; }
+.cv-status-gathering { background: rgba(245,158,11,.12); color: #D97706; }
+.cv-status-active    { background: rgba(22,163,74,.12);  color: #16A34A; }
+.cv-status-completed { background: rgba(59,130,246,.1);  color: #2563EB; }
+.cv-status-expired   { background: rgba(239,68,68,.1);   color: #DC2626; }
+
+/* ═══════════════════════════════════════════════════════════
+   Green / Eco / Leaf Enhancement System
+   Applied to: Dashboard, Community Hub, Sustainability
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Floating Leaf Animation ────────────────────────────── */
+@keyframes cv-leafFloat {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0.12; }
+  25%  { transform: translateY(-8px) rotate(6deg); opacity: 0.18; }
+  50%  { transform: translateY(-4px) rotate(-3deg); opacity: 0.14; }
+  75%  { transform: translateY(-10px) rotate(4deg); opacity: 0.16; }
+  100% { transform: translateY(0) rotate(0deg); opacity: 0.12; }
+}
+
+@keyframes cv-leafSway {
+  0%, 100% { transform: rotate(-5deg) scale(1); }
+  50%      { transform: rotate(5deg) scale(1.05); }
+}
+
+@keyframes cv-growIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* ── Eco Page Wrapper ───────────────────────────────────── */
+.cv-eco-page {
+  position: relative;
+}
+
+.cv-eco-page::before {
+  content: '🌿';
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  font-size: 3rem;
+  opacity: 0.06;
+  animation: cv-leafSway 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cv-eco-page::after {
+  content: '🍃';
+  position: fixed;
+  top: 6rem;
+  right: 4rem;
+  font-size: 2rem;
+  opacity: 0.05;
+  animation: cv-leafFloat 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Green Hero Banner ──────────────────────────────────── */
+.cv-eco-hero {
+  background: var(--cv-eco-gradient);
+  border-radius: var(--cv-radius-lg);
+  padding: 2rem 2.25rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.cv-eco-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cv-eco-hero::after {
+  content: '🌿🍃🌱';
+  position: absolute;
+  right: 1.5rem;
+  bottom: .75rem;
+  font-size: 2.5rem;
+  opacity: 0.15;
+  letter-spacing: .5rem;
+  pointer-events: none;
+}
+
+/* ── Leaf-Accent Card ───────────────────────────────────── */
+.cv-leaf-card {
+  background: var(--cv-surface);
+  border: 1px solid rgba(22,163,74,0.2);
+  border-radius: var(--cv-radius-lg);
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: all .25s var(--cv-ease);
+}
+
+.cv-leaf-card::before {
+  content: '🍃';
+  position: absolute;
+  top: -.5rem;
+  right: -.25rem;
+  font-size: 2.25rem;
+  opacity: 0.08;
+  transform: rotate(-30deg);
+  pointer-events: none;
+  animation: cv-leafSway 5s ease-in-out infinite;
+}
+
+.cv-leaf-card:hover {
+  border-color: rgba(22,163,74,0.4);
+  box-shadow: 0 4px 20px rgba(22,163,74,0.1);
+}
+
+/* ── Plant-Themed Stat Card ─────────────────────────────── */
+.cv-plant-stat {
+  background: linear-gradient(135deg, rgba(22,163,74,0.06) 0%, rgba(34,197,94,0.03) 100%);
+  border: 1px solid rgba(22,163,74,0.15);
+  border-radius: var(--cv-radius-lg);
+  padding: 1rem 1.25rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s var(--cv-ease), box-shadow .2s var(--cv-ease);
+}
+
+.cv-plant-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22,163,74,0.12);
+}
+
+.cv-plant-stat::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--cv-eco-green), var(--cv-eco-green-light));
+}
+
+/* ── Eco Feed Item ──────────────────────────────────────── */
+.cv-eco-feed-item {
+  background: var(--cv-surface);
+  border: 1px solid rgba(22,163,74,0.15);
+  border-left: 4px solid var(--cv-eco-green);
+  border-radius: var(--cv-radius-lg);
+  padding: 1.25rem;
+  position: relative;
+  transition: all .25s var(--cv-ease);
+}
+
+.cv-eco-feed-item:hover {
+  border-left-color: var(--cv-eco-green-light);
+  box-shadow: 0 4px 16px rgba(22,163,74,0.08);
+  transform: translateX(2px);
+}
+
+/* ── Green Divider ──────────────────────────────────────── */
+.cv-eco-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cv-eco-green), transparent);
+  opacity: 0.3;
+  margin: 1.5rem 0;
+  border: none;
+}
+
+/* ── Leaf Badge ─────────────────────────────────────────── */
+.cv-leaf-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .2rem .65rem;
+  background: linear-gradient(135deg, rgba(22,163,74,0.12), rgba(34,197,94,0.06));
+  border: 1px solid rgba(22,163,74,0.25);
+  color: var(--cv-eco-green);
+  border-radius: 99px;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+/* ── Eco Section Title ──────────────────────────────────── */
+.cv-eco-section-title {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  color: var(--cv-eco-green);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.cv-eco-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(22,163,74,0.4), transparent);
+}
+
+/* ── Green Pulse Dot ────────────────────────────────────── */
+.cv-eco-pulse {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cv-eco-green);
+  animation: cv-pulse 2s ease-in-out infinite;
+  margin-right: .35rem;
+}
+
+/* ── Leaf Pattern Background (subtle) ───────────────────── */
+.cv-eco-bg-pattern {
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(22,163,74,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(34,197,94,0.03) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(22,163,74,0.02) 0%, transparent 70%);
+}
+
+/* ── Grow animation for eco elements ────────────────────── */
+.cv-eco-grow {
+  animation: cv-growIn .5s var(--cv-ease) both;
 }

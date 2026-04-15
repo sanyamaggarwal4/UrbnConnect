@@ -17,6 +17,7 @@ import AboutUsPage from './pages/AboutUsPage';
 import SustainabilityPage from './pages/SustainabilityPage';
 import CommunityHubPage from './pages/CommunityHubPage';
 import CreateDrivePage from './pages/CreateDrivePage';
+import CitizenCreateDrivePage from './pages/CitizenCreateDrivePage';
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -43,6 +44,7 @@ export default function App() {
           <Route path="/report" element={<ReportProblemPage />} />
           <Route path="/issues" element={<IssuesListPage />} />
           <Route path="/issues/:id" element={<IssueDetailPage />} />
+          <Route path="/issues/:id/create-drive" element={<CitizenCreateDrivePage />} />
           <Route path="/map" element={<MapViewPage />} />
           <Route path="/area-insights" element={<AreaInsightsPage />} />
           <Route path="/sustainability" element={<SustainabilityPage />} />

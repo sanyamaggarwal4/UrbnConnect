@@ -2,6 +2,13 @@
 
 export type UserRole = 'citizen' | 'authority' | 'guest';
 
+export interface CivicScoreBreakdown {
+  treesAdopted: number;
+  drivesJoined: number;
+  issuesReported: number;
+  total: number;          // weighted: tree×5 + drive×3 + report×2
+}
+
 export interface User {
   id: string;
   name: string;
@@ -11,6 +18,7 @@ export interface User {
   constituency?: string;
   ward?: string;
   avatarUrl?: string;
+  civicScore?: CivicScoreBreakdown;
 }
 
 // ── Issue Categories (PRD Section 13) ────────────────────────
@@ -134,4 +142,24 @@ export interface LeaderboardEntry {
   treesAdopted: number;
   drivesJoined: number;
   issuesReported: number;
+}
+
+// ── Civic Incentives & Community Mobilization (PRD 3) ────────
+
+export type DriveStatus = 'proposed' | 'gathering' | 'active' | 'completed' | 'expired';
+
+export interface CitizenDrive {
+  id: string;
+  issueId: string;       // The issue this drive is related to
+  issueTitle: string;    // For display
+  title: string;
+  description: string;
+  type: DriveType;
+  date?: string;
+  location: string;
+  locality?: string;     // For merge logic: same issue + same locality = merge
+  createdBy: string;     // user name
+  target: number;        // participant target
+  participantsCount: number;
+  status: DriveStatus;
 }

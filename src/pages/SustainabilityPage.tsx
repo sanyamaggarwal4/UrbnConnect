@@ -202,11 +202,11 @@ export default function SustainabilityPage() {
     const criticalZones = TREE_COVERAGE_ZONES.filter(z => z.priority === 'critical' || z.priority === 'high').length;
 
     return (
-        <div className="cv-animate-fadeIn">
+        <div className="cv-animate-fadeIn cv-eco-page cv-eco-bg-pattern">
             {/* ── Header ──────────────────────────────────────────────── */}
-            <div className="cv-page-header">
-                <h1>{t.sustainPageTitle}</h1>
-                <p>{t.sustainPageSubtitle}</p>
+            <div className="cv-eco-hero" style={{ marginBottom: '2rem' }}>
+                <h1 style={{ color: '#fff', margin: 0 }}>{t.sustainPageTitle}</h1>
+                <p style={{ margin: '.35rem 0 0', opacity: 0.85 }}>{t.sustainPageSubtitle}</p>
             </div>
 
             {/* ── KPI Strip ──────────────────────────────────────────── */}
@@ -217,7 +217,7 @@ export default function SustainabilityPage() {
                     { icon: '📊', val: `${avgCoverage}%`, label: t.avgGreenCoverage, color: '#3B82F6' },
                     { icon: '🚨', val: criticalZones, label: t.deficitZones, color: '#EF4444' },
                 ].map(kpi => (
-                    <div key={kpi.label} className="cv-card" style={{ textAlign: 'center', padding: '1.25rem' }}>
+                    <div key={kpi.label} className="cv-plant-stat">
                         <div style={{ fontSize: '1.75rem', marginBottom: '.35rem' }}>{kpi.icon}</div>
                         <div style={{ fontSize: '1.6rem', fontWeight: 900, color: kpi.color, lineHeight: 1.1 }}>{kpi.val}</div>
                         <div className="cv-text-xs cv-text-muted" style={{ marginTop: '.35rem' }}>{kpi.label}</div>
@@ -226,7 +226,7 @@ export default function SustainabilityPage() {
             </div>
 
             {/* ── Tree Coverage Map ─────────────────────────────────── */}
-            <div className="cv-card" style={{ padding: 0, overflow: 'hidden', marginBottom: '2rem' }}>
+            <div className="cv-leaf-card" style={{ padding: 0, overflow: 'hidden', marginBottom: '2rem' }}>
                 <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--cv-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>
                         <h3 style={{ margin: 0 }}>{t.treeCoverageMap}</h3>
@@ -368,12 +368,12 @@ export default function SustainabilityPage() {
 
             {/* ── Area-wise Recommendations ─────────────────────────── */}
             <div style={{ marginBottom: '2rem' }}>
-                <h2 style={{ marginBottom: '1.25rem' }}>{t.areaRecsTitle}</h2>
+                <h2 className="cv-eco-section-title"><span>📍</span> {t.areaRecsTitle}</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1rem' }}>
                     {AREA_RECOMMENDATIONS.map(rec => {
                         const style = getPriorityStyle(rec.priority);
                         return (
-                            <div key={rec.area} className="cv-card" style={{ borderTop: `3px solid ${style.color}` }}>
+                            <div key={rec.area} className="cv-leaf-card" style={{ borderTop: `3px solid ${style.color}` }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', marginBottom: '.85rem' }}>
                                     <span style={{ fontSize: '1.4rem' }}>{rec.icon}</span>
                                     <div>
@@ -399,13 +399,13 @@ export default function SustainabilityPage() {
 
             {/* ── Green Infra Suggestions ────────────────────────────── */}
             <div style={{ marginBottom: '2rem' }}>
-                <h2 style={{ marginBottom: '.5rem' }}>{t.greenSuggestTitle}</h2>
+                <h2 className="cv-eco-section-title"><span>💡</span> {t.greenSuggestTitle}</h2>
                 <p className="cv-text-sm cv-text-secondary" style={{ marginBottom: '1.25rem' }}>
                     {t.greenSuggestSubtitle}
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
                     {GREEN_SUGGESTIONS.map(s => (
-                        <div key={s.title} className="cv-card" style={{ position: 'relative', overflow: 'hidden' }}>
+                        <div key={s.title} className="cv-leaf-card" style={{ position: 'relative', overflow: 'hidden' }}>
                             <div style={{
                                 position: 'absolute', top: 0, right: 0, width: 80, height: 80,
                                 background: `${s.impactColor}08`, borderRadius: '0 0 0 100%',
@@ -424,7 +424,7 @@ export default function SustainabilityPage() {
             </div>
 
             {/* ── Report CTA ────────────────────────────────────────── */}
-            <div className="cv-card" style={{
+            <div className="cv-leaf-card" style={{
                 background: 'linear-gradient(135deg, rgba(16,185,129,0.08), rgba(59,130,246,0.08))',
                 border: '1px solid rgba(16,185,129,0.25)',
                 textAlign: 'center',
